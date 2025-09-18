@@ -1,0 +1,3 @@
+[1mutils_codon.py:8 (15-39): [1;31merror:[0m[1m cannot import name 'join' from 'os.path'[0m
+├─ [1mutils_codon.py:17 (14-24): [1;31merror:[0m[1m during the realization of read_fasta(path: str, name: str)[0m
+╰─ [1mmain_codon.py:12 (33-42): [1;31merror:[0m[1m during the realization of read_data(path: str)[0m

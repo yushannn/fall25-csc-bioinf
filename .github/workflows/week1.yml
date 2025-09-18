@@ -1,0 +1,39 @@
+name: Week 1 Evaluation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'week1/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'week1/**'
+  workflow_dispatch:
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install Codon
+      run: |
+        /bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
+        echo "$HOME/.codon/bin" >> $GITHUB_PATH
+    
+    - name: Run evaluation script
+      run: bash week1/evaluate.sh
+      
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: evaluation-results
+        path: |
+          week1/data/*/contig*.fasta
