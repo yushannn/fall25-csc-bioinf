@@ -48,33 +48,95 @@ def main():
         print("Usage: codon run main_codon_simple.py <data_directory>")
         return
     
-    # Read data
-    data_path = join_path('./data', sys.argv[1])
+    # Read data - fix the path issue
+    data_path = join_path('.', sys.argv[1])
     short1, short2, long1 = read_data(data_path)
     
     print(f"Read {len(short1)} short1 sequences")
     print(f"Read {len(short2)} short2 sequences")  
     print(f"Read {len(long1)} long sequences")
     
-    # Instead of implementing the full DBG, let's just create a simple placeholder
-    # that generates a dummy contig for demonstration purposes
+    # Implement a simple De Bruijn Graph algorithm
+    k = 25
     
-    # Create a simple contig from the first sequence
-    if short1:
-        contig = short1[0]
-        if len(contig) > 100:
-            contig = contig[:100]  # Truncate for demonstration
-    else:
-        contig = "ACGTACGTACGTACGTACGT"  # Fallback
+    # Build k-mer dictionary
+    kmer_dict = {}
+    kmer_count = 0
     
-    # Output contig
+    # Process all sequences
+    all_sequences = short1 + short2 + long1
+    
+    for seq in all_sequences:
+        # Add forward k-mers
+        for i in range(len(seq) - k + 1):
+            kmer = seq[i:i+k]
+            if kmer not in kmer_dict:
+                kmer_dict[kmer] = 0
+            kmer_dict[kmer] += 1
+            
+        # Add reverse complement k-mers
+        rc_seq = reverse_complement(seq)
+        for i in range(len(rc_seq) - k + 1):
+            kmer = rc_seq[i:i+k]
+            if kmer not in kmer_dict:
+                kmer_dict[kmer] = 0
+            kmer_dict[kmer] += 1
+    
+    print(f"Built k-mer dictionary with {len(kmer_dict)} unique {k}-mers")
+    
+    # Find most frequent k-mers and try to extend them
+    sorted_kmers = sorted(kmer_dict.keys(), key=lambda x: kmer_dict[x], reverse=True)
+    
+    contigs = []
+    used_kmers = set()
+    
+    for start_kmer in sorted_kmers[:100]:  # Try top 100 k-mers as starts
+        if start_kmer in used_kmers:
+            continue
+            
+        contig = start_kmer
+        current_kmer = start_kmer
+        used_kmers.add(start_kmer)
+        
+        # Extend to the right
+        while True:
+            found_extension = False
+            best_next = None
+            best_count = 0
+            
+            # Try all possible next k-mers
+            prefix = current_kmer[1:]  # Remove first base
+            for base in ['A', 'C', 'G', 'T']:
+                next_kmer = prefix + base
+                if next_kmer in kmer_dict and next_kmer not in used_kmers:
+                    if kmer_dict[next_kmer] > best_count:
+                        best_count = kmer_dict[next_kmer]
+                        best_next = next_kmer
+                        found_extension = True
+            
+            if found_extension and best_count >= 2:  # Minimum coverage threshold
+                contig += best_next[-1]  # Add last base
+                used_kmers.add(best_next)
+                current_kmer = best_next
+            else:
+                break
+        
+        # Only keep contigs longer than k+10
+        if len(contig) > k + 10:
+            contigs.append(contig)
+    
+    # Sort contigs by length
+    contigs.sort(key=len, reverse=True)
+    
+    # Output contigs
     output_path = join_path(data_path, 'contig_codon.fasta')
     with open(output_path, 'w') as f:
-        f.write('>contig_0\n')
-        f.write(f'{contig}\n')
+        for i, contig in enumerate(contigs[:20]):  # Output top 20 contigs
+            f.write(f'>contig_{i}\n')
+            f.write(f'{contig}\n')
+            print(f"Contig {i}: length {len(contig)}")
     
-    print(f"Wrote placeholder contig of length {len(contig)} to {output_path}")
-    print("Note: This is a simplified implementation for demonstration.")
+    print(f"Wrote {len(contigs[:20])} contigs to {output_path}")
 
 if __name__ == "__main__":
     main()
