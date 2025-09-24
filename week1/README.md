@@ -4,6 +4,8 @@
 
 UVic/CSC-427 Biological Informatics course Fall 2025. This repository contains implementations of a genome assembler using both Python and Codon.
 
+Updated to trigger CI workflow
+
 ## 🧬 Overview
 
 This project implements a De Bruijn Graph (DBG) approach for genome assembly in two languages:
