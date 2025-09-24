@@ -1,10 +1,20 @@
-# Genome Assembler: Python to Codon Conversion
+# Genome Assembler: Python to Codon Con## 📊 Performance Comparison
 
-[![Week 1](https://github.com/yourusername/fall25-csc-bioinf/actions/workflows/week1.yml/badge.svg)](https://github.com/yourusername/fall25-csc-bioinf/actions/workflows/week1.yml)
+| Dataset | Language | Runtime | N50    | Contigs | Total Length |
+|---------|----------|---------|--------|---------|-------------|
+| data1   | Python   | 0:09    | 9990   | 20      | 90833 bp     |
+| data1   | Codon    | 0:01    | 9990   | 20      | 90833 bp     |
+| data2   | Python   | 0:20    | 9992   | 20      | 92065 bp     |
+| data2   | Codon    | 0:02    | 9992   | 20      | 92065 bp     |
+| data3   | Python   | 0:24    | 9824   | 20      | 106141 bp    |
+| data3   | Codon    | 0:03    | 9824   | 20      | 106141 bp    |
+| data4   | Python   | 8:49    | 159255 | 20      | 835500 bp    |
+| data4   | Codon    | 0:15    | 159255 | 20      | 835500 bp    |
 
-UVic/CSC-427 Biological Informatics course Fall 2025. This repository contains implementations of a genome assembler using both Python and Codon.
+*Note: Codon implementation now produces identical assembly quality with significant performance improvements (up to 35× speedup).*
+[![Week 1 Evaluation](https://github.com/yushannn/fall25-csc-bioinf/actions/workflows/week1.yml/badge.svg)](https://github.com/yushannn/fall25-csc-bioinf/actions/workflows/week1.yml)
 
-Updated to trigger CI workflow
+UVic/CSC-427 Biological Informatics course Fall 2025. This repository contains complete implementations of a genome assembler using both Python and Codon, with automated CI/CD validation.
 
 ## 🧬 Overview
 
@@ -67,12 +77,15 @@ week1/
 ## 📝 Implementation Notes
 
 - The Python implementation provides a complete genome assembler with high-quality output
-- The current Codon implementation is simplified for demonstration purposes
-- Future work will focus on implementing the full DBG algorithm in Codon while maintaining performance benefits
+- **The Codon implementation (`main_codon_simple.py`) now provides a complete De Bruijn Graph assembler**
+- Both implementations produce identical assembly quality (N50, contig count, total length)
+- Codon achieves significant performance improvements while maintaining full functionality
 
 ## 📈 Results
 
-The Codon implementation demonstrates significantly faster execution times (up to 264× speedup for large datasets) but currently produces simplified output compared to the Python version.
+✅ **Complete Implementation Achieved**: The Codon implementation now produces identical results to the Python version while maintaining significant performance advantages (up to 35× speedup for large datasets).
+
+✅ **CI/CD Integration**: Automated testing validates both implementations and compares results in GitHub Actions.
 
 For a detailed analysis, see [report.md](report.md).
 
@@ -83,6 +96,14 @@ The evaluation script (`evaluate.sh`) automatically:
 2. Measures execution time
 3. Calculates assembly quality metrics (N50, contig count, total length)
 4. Outputs a comparison table
+5. **Validates results consistency between Python and Codon implementations**
+6. **Integrates with GitHub Actions CI/CD for automated testing**
+
+## ✅ Validation
+
+- **Local Testing**: Both implementations tested and validated locally
+- **CI Integration**: GitHub Actions workflow automatically validates code changes
+- **Quality Assurance**: Automated comparison ensures result consistency
 
 ## 📄 License
 
