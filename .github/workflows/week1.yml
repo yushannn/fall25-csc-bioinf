@@ -25,11 +25,20 @@ jobs:
     
     - name: Install Codon
       run: |
-        /bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
+        curl -fsSL https://exaloop.io/install.sh | bash
         echo "$HOME/.codon/bin" >> $GITHUB_PATH
+        echo "PATH=$HOME/.codon/bin:$PATH" >> $GITHUB_ENV
     
+    - name: Verify Codon installation
+      run: |
+        export PATH="$HOME/.codon/bin:$PATH"
+        which codon
+        codon --version
+        
     - name: Run evaluation script
-      run: bash week1/evaluate.sh
+      run: |
+        export PATH="$HOME/.codon/bin:$PATH"
+        bash week1/evaluate.sh
       
     - name: Archive results
       uses: actions/upload-artifact@v4
