@@ -53,8 +53,8 @@ jobs:
     - name: Run Week 2 Test Suite
       run: |
         cd week2
-        echo "Running complete Week 2 test suite..."
-        python test_runner.py
+        echo "Running Week 2 tests with Python..."
+        python test.py
         
     - name: Validate Codon installation (optional)
       run: |
