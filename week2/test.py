@@ -7,17 +7,12 @@ For Codon, use @test decorators. For Python, it can also run as regular function
 """
 
 # Conditional imports based on environment
-if __name__ == "__main__" and "codon" not in __file__:
-    # Running with Python
-    try:
-        from Bio import motifs
-        from Bio.motifs import matrix, minimal, thresholds
-        USING_CODON = False
-        print("Running tests with BioPython")
-    except ImportError:
-        print("BioPython not available, skipping Python tests")
-        exit(0)
-else:
+try:
+    is_codon = __codon__
+except NameError:
+    is_codon = False
+
+if is_codon:
     # Running with Codon
     try:
         from bio_codon import motifs
@@ -27,6 +22,16 @@ else:
     except ImportError as e:
         print(f"Codon port not available: {e}")
         exit(1)
+else:
+    # Running with Python
+    try:
+        from Bio import motifs
+        from Bio.motifs import matrix, minimal, thresholds
+        USING_CODON = False
+        print("Running tests with BioPython")
+    except ImportError:
+        print("BioPython not available, skipping Python tests")
+        exit(0)
 
 
 # Test decorator for Codon compatibility
