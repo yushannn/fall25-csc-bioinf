@@ -1,0 +1,52 @@
+name: Week 2 - Bio.motifs Port
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'week2/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'week2/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install BioPython
+      run: |
+        pip install biopython numpy
+        
+    - name: Install Codon
+      run: |
+        /bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
+        echo 'export PATH="$HOME/.codon/bin:$PATH"' >> $GITHUB_ENV
+        
+    - name: Verify installations
+      run: |
+        export PATH="$HOME/.codon/bin:$PATH"
+        python --version
+        python -c "import Bio; print('BioPython version:', Bio.__version__)"
+        codon --version
+        
+    - name: Test Python implementation
+      run: |
+        cd week2
+        python test.py
+        
+    - name: Test Codon implementation
+      run: |
+        export PATH="$HOME/.codon/bin:$PATH"
+        cd week2
+        codon run -release test.py
