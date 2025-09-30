@@ -559,3 +559,24 @@ class Motif:
             return "\n".join(lines)
         else:
             return str(self)
+
+    def format(self, format_type: str = "meme") -> str:
+        """Return a string representation of the Motif in the given format.
+        
+        Args:
+            format_type: Format specification string. Supported formats:
+                        - 'meme': MEME minimal format (uses minimal module)
+                        - 'pfm' or 'jaspar': JASPAR position frequency matrix
+                        - 'transfac': TRANSFAC database format
+                        - Default: returns MEME format
+        
+        Returns:
+            str: Formatted string representation of the motif.
+        """
+        if format_type == "meme":
+            # Use the minimal module for MEME format
+            from . import minimal
+            return minimal.write([self])
+        else:
+            # Use the __format__ method for other formats
+            return self.__format__(format_type)
