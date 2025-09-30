@@ -3,12 +3,37 @@
 from typing import List, Dict, Optional, TextIO, Any
 from . import Motif
 
+# Constants for MEME format parsing
+MEME_VERSION_PREFIX = "MEME version"
+ALPHABET_PREFIX = "ALPHABET="
+BACKGROUND_PREFIX = "Background letter frequencies"
+MOTIF_PREFIX = "letter-probability matrix:"
+MOTIF_NAME_KEYWORDS = ["MOTIF", "motif"]
+DEFAULT_MOTIF_NAME = "Unnamed"
+MAX_LINE_LENGTH = 10000  # Safety limit for line parsing
+DEFAULT_BACKGROUND_FREQ = 0.25  # Default frequency if not specified
+
 
 class Record:
-    """Record holding MEME minimal format data."""
+    """Record holding MEME minimal format data.
+    
+    A Record object holds the information from a MEME minimal format file,
+    including version information, alphabet, background frequencies, and
+    a list of motifs.
+    
+    Attributes:
+        version: MEME version string.
+        alphabet: String containing alphabet characters.
+        background: Dictionary of background character frequencies.
+        motifs: List of Motif objects parsed from the file.
+    """
 
     def __init__(self):
-        """Initialize Record."""
+        """Initialize an empty MEME Record.
+        
+        Creates a new Record with empty fields that will be populated
+        during parsing of a MEME minimal format file.
+        """
         self.version: str = ""
         self.alphabet: str = ""
         self.background: Dict[str, float] = {}
@@ -19,17 +44,33 @@ class Record:
         return len(self.motifs)
 
     def __getitem__(self, key) -> Motif:
-        """Get motif by index or name."""
+        """Get motif by index or name.
+        
+        Args:
+            key: Either an integer index or string name.
+        
+        Returns:
+            Motif: The requested motif.
+        
+        Raises:
+            IndexError: If integer index is out of range.
+            KeyError: If string name is not found.
+            TypeError: If key is neither int nor str.
+        """
         if isinstance(key, int):
-            return self.motifs[key]
+            if not self.motifs:
+                raise IndexError("No motifs in record")
+            return self.motifs[key]  # Let list handle IndexError
         elif isinstance(key, str):
+            if not key.strip():
+                raise KeyError("Motif name cannot be empty")
             # Search by name
             for motif in self.motifs:
-                if motif.name == key:
+                if hasattr(motif, 'name') and motif.name == key:
                     return motif
             raise KeyError(f"Motif with name '{key}' not found")
         else:
-            raise TypeError("Key must be int or str")
+            raise TypeError(f"Key must be int or str, got {type(key)}")
 
     def __iter__(self):
         """Iterate over motifs."""
@@ -38,18 +79,29 @@ class Record:
 
 def read(handle: TextIO) -> Record:
     """Parse the text output of the MEME program into a Record object.
-
-    Examples
-    --------
-    >>> from bio_codon.motifs import minimal
-    >>> with open("motifs/meme.out") as f:
-    ...     record = minimal.read(f)
-    ...
-    >>> for motif in record:
-    ...     print(motif.name, getattr(motif, 'evalue', 'N/A'))
-    ...
-
-    This function won't retrieve instances, as there are none in minimal meme format.
+    
+    Parses MEME minimal format files containing motif data. The function
+    extracts version information, alphabet, background frequencies, and
+    position weight matrices for each motif.
+    
+    Args:
+        handle: File handle or text stream to read from. Must support
+               line iteration.
+    
+    Returns:
+        Record: A Record object containing all parsed information.
+    
+    Raises:
+        ValueError: If the file format is invalid or corrupted.
+        IOError: If there are problems reading from the handle.
+    
+    Examples:
+        >>> from bio_codon.motifs import minimal
+        >>> with open("motifs/meme.out") as f:
+        ...     record = minimal.read(f)
+        ...
+        >>> for motif in record:
+        ...     print(motif.name, getattr(motif, 'evalue', 'N/A'))
     """
     record = Record()
     
