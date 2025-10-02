@@ -1,0 +1,11 @@
+short_1.fasta: 8500 sequences, length 100
+short_2.fasta: 8500 sequences, length 100
+long.fasta: 250 sequences, length 1000
+Read 8500 short1 sequences
+Read 8500 short2 sequences
+Read 250 long sequences
+Built k-mer dictionary with 534762 unique 25-mers
+Contig 0: length 6643
+Contig 1: length 4760
+Contig 2: length 4556
+Wrote 3 contigs to ./data/data1/contig_codon.fasta
