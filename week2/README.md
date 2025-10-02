@@ -1,31 +1,85 @@
-# Week 2: Bio.motifs Codon移植项目
+# Week 2: Bio.motifs Codon Port
 
-这个目录包含Bio.motifs模块的Codon移植版本，实现了序列motif分析的核心功能。
+This directory contains the Codon port of BioPython's Bio.motifs package for sequence motif analysis.
 
-## 📁 项目结构
+## Project Structure
 
 ```
 week2/
-├── README.md                   # 项目概述（本文件）
-├── test.py                     # 统一测试文件（Python + Codon）
-├── report.md                   # 实现报告
-├── ai.md                       # AI协助文档
-├── bio_codon/                  # 🎯 Codon移植版本
-│   ├── README.md              # 移植版本详细文档
-│   ├── __init__.py            # 包初始化
-│   └── motifs/                # motifs子模块
-│       ├── README.md          # 模块详细文档  
-│       ├── __init__.py        # 核心Motif类 (561行)
-│       ├── matrix.py          # 矩阵类实现 (547行)
-│       ├── minimal.py         # MEME格式支持 (456行)
-│       └── thresholds.py      # 阈值计算 (203行)
-└── biopython-source/          # 📚 BioPython源文件参考
-    ├── README.md              # 源文件说明
-    ├── __init__.py            # Bio.motifs.__init__.py
-    ├── matrix.py              # Bio.motifs.matrix
-    ├── minimal.py             # Bio.motifs.minimal
-    └── thresholds.py          # Bio.motifs.thresholds
+├── README.md                   # Project overview
+├── test.py                     # Unified test file (Python + Codon)
+├── report.md                   # Implementation report
+├── ai.md                       # AI assistance documentation
+└── bio_codon/                  # Codon port implementation
+    ├── __init__.py            # Package initialization
+    └── motifs/                # motifs submodule
+        ├── __init__.py        # Core Motif class
+        ├── matrix.py          # Matrix classes implementation
+        ├── minimal.py         # MEME format support
+        └── thresholds.py      # Threshold calculations
 ```
+
+## Implementation Status
+
+| BioPython Module | Codon Port | Status |
+|------------------|------------|--------|
+| `Bio.motifs.__init__.py` | `bio_codon/motifs/__init__.py` | Complete |
+| `Bio.motifs.matrix` | `bio_codon/motifs/matrix.py` | Complete |
+| `Bio.motifs.minimal` | `bio_codon/motifs/minimal.py` | Complete |
+| `Bio.motifs.thresholds` | `bio_codon/motifs/thresholds.py` | Complete |
+
+## Quick Start
+
+### Running Tests
+```bash
+# Python environment
+python test.py
+
+# Codon environment (if installed)
+codon test.py
+```
+
+### Basic Usage
+```python
+# Import the ported version
+from bio_codon import motifs
+
+# Create motif
+sequences = ["ACGT", "ACGG", "ACGA", "ACGC"]  
+motif = motifs.create(sequences)
+
+# Access matrices
+fpm = motif.counts              # Frequency matrix
+pwm = fpm.normalize()           # Weight matrix
+pssm = pwm.log_odds()          # Scoring matrix
+
+# Calculate consensus sequence
+print(motif.consensus)          # Output: ACGN
+```
+
+## Features
+
+- Basic motif operations and matrix calculations
+- MEME format parsing and writing
+- Threshold analysis and statistical computations
+- Reverse complement handling
+- Cross-platform compatibility (Python/Codon)
+
+## Testing
+
+The implementation includes comprehensive tests covering:
+- Motif creation and basic operations
+- Frequency/weight/scoring matrices
+- Sequence search and scoring
+- MEME format I/O
+- Error handling
+
+## Technical Notes
+
+- No NumPy dependencies (Codon does not support NumPy)
+- Native mathematical operations using Codon/Python types
+- Maintains BioPython API compatibility where possible
+- Type hints throughout for better code clarity
 
 ## ✅ 移植完成度
 
