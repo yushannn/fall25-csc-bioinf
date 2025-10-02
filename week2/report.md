@@ -377,10 +377,11 @@ def log_odds(self, background: Optional[Dict[str, float]] = None) -> "PositionSp
 ### Multi-Dimensional Test Coverage
 
 #### 1. Functional Testing
-- **Basic Operations**: 47 test cases covering core functionality
-- **Edge Cases**: 23 test cases for boundary conditions
-- **Error Conditions**: 31 test cases for exception handling
-- **Integration Tests**: 18 test cases for module interactions
+- **Basic Operations**: 5 test cases covering core functionality (motif creation, matrices, consensus)
+- **Extended Functionality**: 3 test cases for reverse complement, PSSM scoring, and search
+- **Edge Cases**: 4 test cases for boundary conditions (single/short/long sequences, empty inputs)
+- **Error Conditions**: 3 test cases for exception handling (invalid characters, mixed lengths, type errors)
+- **Performance & Integration**: 2 test cases for large datasets and module interactions
 
 #### 2. Performance Testing
 ```python
@@ -411,7 +412,7 @@ def test_comprehensive_error_conditions():
         (create, ("ATCG",), TypeError, "must be a list"),
         (create, (["ATCG", 123],), TypeError, "must be strings"),
         (create, (["ATCG", "ATXG"],), ValueError, "invalid characters"),
-        # ... 28 more error test cases
+        # Additional boundary and error cases tested
     ]
     
     for func, args, expected_error, expected_message in error_test_cases:
@@ -622,7 +623,7 @@ print(f"Motif alphabet: {record.alphabet}")
 ✅ **Comprehensive Error Handling**: All edge cases covered with meaningful messages  
 ✅ **Performance Optimized**: 3.6x average speedup over Python implementation  
 ✅ **Fully Compatible API**: Drop-in replacement for BioPython.motifs  
-✅ **Extensive Testing**: 119 test cases with 95%+ coverage  
+✅ **Comprehensive Testing**: 17 test cases covering core functionality, edge cases, and integration  
 ✅ **Well Documented**: Complete API documentation with examples  
 ✅ **Memory Efficient**: 38% reduction in memory usage  
 ✅ **Type Safe**: Full type annotation coverage  

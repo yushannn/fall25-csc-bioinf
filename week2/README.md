@@ -68,11 +68,13 @@ print(motif.consensus)          # Output: ACGN
 ## Testing
 
 The implementation includes comprehensive tests covering:
-- Motif creation and basic operations
-- Frequency/weight/scoring matrices
-- Sequence search and scoring
-- MEME format I/O
-- Error handling
+- Core functionality: motif creation, matrix operations, scoring
+- Edge cases: empty inputs, single sequences, mixed lengths
+- Error handling: invalid characters, type mismatches
+- Performance: large dataset handling
+- Integration: full workflow from sequences to scoring matrices
+
+Test suite contains 17 tests covering basic operations, boundary conditions, error cases, and integration scenarios.
 
 ## Technical Notes
 
@@ -81,43 +83,33 @@ The implementation includes comprehensive tests covering:
 - Maintains BioPython API compatibility where possible
 - Type hints throughout for better code clarity
 
-## ✅ 移植完成度
+## Implementation Details
 
-| BioPython模块 | Codon移植版本 | 状态 | 代码行数 |
-|---------------|--------------|------|----------|
-| `Bio.motifs.__init__.py` | `bio_codon/motifs/__init__.py` | ✅ 完成 | 561行 |
-| `Bio.motifs.matrix` | `bio_codon/motifs/matrix.py` | ✅ 完成 | 547行 |
-| `Bio.motifs.minimal` | `bio_codon/motifs/minimal.py` | ✅ 完成 | 456行 |
-| `Bio.motifs.thresholds` | `bio_codon/motifs/thresholds.py` | ✅ 完成 | 203行 |
-| **总计** | **bio_codon/motifs/** | **✅ 完成** | **1767行** |
+| BioPython Module | Codon Port | Status | Lines of Code |
+|------------------|------------|--------|---------------|
+| `Bio.motifs.__init__.py` | `bio_codon/motifs/__init__.py` | Complete | 561 |
+| `Bio.motifs.matrix` | `bio_codon/motifs/matrix.py` | Complete | 547 |
+| `Bio.motifs.minimal` | `bio_codon/motifs/minimal.py` | Complete | 456 |
+| `Bio.motifs.thresholds` | `bio_codon/motifs/thresholds.py` | Complete | 203 |
+| **Total** | **bio_codon/motifs/** | **Complete** | **1767** |
 
-## 🚀 快速开始
+## Usage Examples
 
-### 测试运行
-```bash
-# Python环境测试
-python test.py
-
-# Codon环境测试（如果安装了Codon）
-codon test.py
-```
-
-### 基本使用
+### Matrix Operations
 ```python
-# 导入移植版本
 from bio_codon import motifs
 
-# 创建motif
+# Create motif from sequences
 sequences = ["ACGT", "ACGG", "ACGA", "ACGC"]  
 motif = motifs.create(sequences)
 
-# 访问矩阵
-fpm = motif.counts              # 频率矩阵
-pwm = fpm.normalize()           # 权重矩阵
-pssm = pwm.log_odds()          # 评分矩阵
+# Access different matrix types
+fpm = motif.counts              # Frequency matrix
+pwm = fpm.normalize()           # Weight matrix
+pssm = pwm.log_odds()          # Scoring matrix
 
-# 计算共识序列
-print(motif.consensus)          # 输出: ACGN
+# Calculate consensus sequence
+print(motif.consensus)          # Output: ACGN
 ```
 
 ## 📊 功能对比
