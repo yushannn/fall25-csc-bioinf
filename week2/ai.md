@@ -37,6 +37,7 @@ I used GitHub Copilot and ChatGPT to help with porting BioPython's Bio.motifs pa
 - Had to manually fix NumPy dependencies that AI included
 - Needed to simplify overly complex suggestions
 - AI-generated documentation was sometimes too verbose
+- It is very important to double check each step
 
 ## Time Saved
 AI probably saved me 3-4 hours of:
