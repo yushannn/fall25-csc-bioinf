@@ -54,16 +54,9 @@ jobs:
       run: |
         cd week2
         echo "Running Week 2 tests with Python..."
-        python test.py
+        python test.py || exit 1  # Ensure CI fails when tests fail
         
-    - name: Validate Codon installation (optional)
-      run: |
-        cd week2
-        echo "Checking Codon availability..."
         if command -v codon &> /dev/null; then
-          echo "✅ Codon is available: $(codon --version 2>/dev/null || echo 'version check failed')"
-          echo "Note: Codon-specific performance tests would be run here in a full implementation"
-        else
-          echo "ℹ️ Codon not available - this is acceptable for CI"
-          echo "ℹ️ Week 2 implementation supports both Python and Codon environments"
+          echo "Running Week 2 tests with Codon..."
+          codon test.py || echo "Codon tests failed (non-critical)"
         fi
